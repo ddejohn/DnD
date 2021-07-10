@@ -1,59 +1,66 @@
 import cmd
+from random import randint
 # import yaml
+
+
+class Ability:
+    def __init__(self, **data) -> None:
+        for attr, value in data.items():
+            setattr(self, attr, value)
 
 
 class Strength:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
-        self.athletics : int
+        self.raw = 0
+        self.saving = 0
+        self.athletics = 0
 
 
 class Dexterity:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
-        self.acrobatics : int
-        self.sleight_of_hand : int
-        self.stealth : int
+        self.raw = 0
+        self.saving = 0
+        self.acrobatics = 0
+        self.sleight_of_hand = 0
+        self.stealth = 0
 
 
 class Constitution:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
+        self.raw = 0
+        self.saving = 0
 
 
 class Intelligence:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
-        self.arcana : int
-        self.history : int
-        self.investigation : int
-        self.nature : int
-        self.religion : int
+        self.raw = 0
+        self.saving = 0
+        self.arcana = 0
+        self.history = 0
+        self.investigation = 0
+        self.nature = 0
+        self.religion = 0
 
 
 class Wisdom:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
-        self.animal_handling : int
-        self.insight : int
-        self.medicine : int
-        self.perception : int
-        self.survival : int
+        self.raw = 0
+        self.saving = 0
+        self.animal_handling = 0
+        self.insight = 0
+        self.medicine = 0
+        self.perception = 0
+        self.survival = 0
 
 
 class Charisma:
     def __init__(self, **kwargs) -> None:
-        self.raw : int
-        self.saving : int
-        self.deception : int
-        self.intimidation : int
-        self.performance : int
-        self.persuasion : int
+        self.raw = 0
+        self.saving = 0
+        self.deception = 0
+        self.intimidation = 0
+        self.performance = 0
+        self.persuasion = 0
 
 
 class Player:
@@ -79,7 +86,7 @@ class dndShell(cmd.Cmd):
     saving = False
 
     def dice(self, num_sides, num_dice=1):
-        pass
+        return [randint(1, num_sides) for _ in range(num_dice)]
 
     def precmd(self, line) -> None:
         """Strip args"""
