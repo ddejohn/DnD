@@ -250,6 +250,6 @@ if __name__ == "__main__":
         filepath = sys.argv[1]
     except IndexError:
         print("No filepath given!")
-        exit
+        quit
 
     Player(filepath)
