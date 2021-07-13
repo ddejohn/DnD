@@ -1,76 +1,87 @@
 import cmd
+import sys
 from random import randint
-# import yaml
+import yaml
 
 
-class Ability:
-    def __init__(self, **data) -> None:
-        for attr, value in data.items():
-            setattr(self, attr, value)
+class BaseAbility:
+    def __init__(self, raw: int, saving: int) -> None:
+        self.raw = raw
+        self.saving = saving
+    
+    def __str__(self):
+        return "\n".join(f"    {k}: {v}" for k, v in self.__dict__.items())
 
 
-class Strength:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
-        self.athletics = 0
+class Strength(BaseAbility):
+    def __init__(self, *, raw: int,
+                          saving: int,
+                          athletics: int) -> None:
+        super().__init__(raw, saving)
+        self.athletics = athletics
 
 
-class Dexterity:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
-        self.acrobatics = 0
-        self.sleight_of_hand = 0
-        self.stealth = 0
+class Dexterity(BaseAbility):
+    def __init__(self, *, raw: int,
+                          saving: int,
+                          acrobatics: int,
+                          sleight_of_hand: int,
+                          stealth: int) -> None:
+        super().__init__(raw, saving)
+        self.acrobatics = acrobatics
+        self.sleight_of_hand = sleight_of_hand
+        self.stealth = stealth
 
 
-class Constitution:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
+class Constitution(BaseAbility):
+    def __init__(self, *, raw: int, saving: int) -> None:
+        super().__init__(raw, saving)
 
 
-class Intelligence:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
-        self.arcana = 0
-        self.history = 0
-        self.investigation = 0
-        self.nature = 0
-        self.religion = 0
+class Intelligence(BaseAbility):
+    def __init__(self, *, raw: int,
+                          saving: int,
+                          arcana: int,
+                          history: int,
+                          investigation: int,
+                          nature: int,
+                          religion: int) -> None:
+        super().__init__(raw, saving)
+        self.arcana = arcana
+        self.history = history
+        self.investigation = investigation
+        self.nature = nature
+        self.religion = religion
 
 
-class Wisdom:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
-        self.animal_handling = 0
-        self.insight = 0
-        self.medicine = 0
-        self.perception = 0
-        self.survival = 0
+class Wisdom(BaseAbility):
+    def __init__(self, *, raw: int,
+                          saving: int,
+                          animal_handling: int,
+                          insight: int,
+                          medicine: int,
+                          perception: int,
+                          survival: int) -> None:
+        super().__init__(raw, saving)
+        self.animal_handling = animal_handling
+        self.insight = insight
+        self.medicine = medicine
+        self.perception = perception
+        self.survival = survival
 
 
-class Charisma:
-    def __init__(self, **kwargs) -> None:
-        self.raw = 0
-        self.saving = 0
-        self.deception = 0
-        self.intimidation = 0
-        self.performance = 0
-        self.persuasion = 0
-
-
-class Player:
-    def __init__(self, filepath: str) -> None:
-        self.strength = Strength()
-        self.dexterity = Dexterity()
-        self.constitution = Constitution()
-        self.intelligence = Intelligence()
-        self.wisdom = Wisdom()
-        self.charisma = Charisma()
+class Charisma(BaseAbility):
+    def __init__(self, *, raw: int,
+                          saving: int,
+                          deception: int,
+                          intimidation: int,
+                          performance: int,
+                          persuasion: int) -> None:
+        super().__init__(raw, saving)
+        self.deception = deception
+        self.intimidation = intimidation
+        self.performance = performance
+        self.persuasion = persuasion
 
 
 class dndShell(cmd.Cmd):      
@@ -79,9 +90,9 @@ class dndShell(cmd.Cmd):
     # `charisma -s -d`, raw ability saving throw with disadvantage
     # `insight -c`, skill check
     intro = "Welcome to the DnD shell! Type help or ? to list commands.\n"
-    prompt = "(DnD) "
-    advantage = False
-    disadvantage = False
+    prompt = "(DnD) > "
+    adv = False
+    disadv = False
     check = True
     saving = False
 
@@ -91,107 +102,141 @@ class dndShell(cmd.Cmd):
     def precmd(self, line) -> None:
         """Strip args"""
         args = line.split()
-        # set advantage or disadvantage
-        # set ability check or saving throw
-        # return
-        pass
+        self.adv = "-a" in args
+        self.disadv = "-d" in args
+        self.check = "-c" in args
+        self.saving = "-s" in args
+        return args[0]
 
-    def postcmd(self, line: str, stop=False) -> bool:
-        """Reset state"""
-        self.advantage = False
-        self.disadvantage = False
-        self.check = True
-        self.saving = False
-        return stop
+    def roll(self, ability):
+        print(f"adv: {self.adv}\ndisadv: {self.disadv}")
+        rolls = self.dice(20, 1 + (self.adv ^ self.disadv))
+        result = min(rolls) if ((not self.adv) and self.disadv) else max(rolls)
+        print(f"dice rolls: {rolls}")
+        print(f"modded: {result + ((ability // 2) - 5)}")
 
-    def roll(self, ability, advantage, disadvantage):
-        rolls = [self.dice(20) for _ in range(1 + (advantage ^ disadvantage))]
-        if (not advantage) and disadvantage:
-            raw_roll = min(rolls)
-        else:
-            raw_roll = max(rolls)
-        return raw_roll + (ability // 2) - 5
+    def do_display(self, args):
+        print(self)
 
-    def do_strength(self):
+    def do_strength(self, args):
         self.strength.raw
         self.strength.saving
-        pass
+        if self.check:
+            return self.roll(self.strength.raw)
+        return self.roll(self.strength.saving)
 
-    def do_dexterity(self):
+    def do_dexterity(self, args):
         self.dexterity.raw
         self.dexterity.saving
-        pass
+        if self.check:
+            return self.roll(self.dexterity.raw)
+        return self.roll(self.dexterity.saving)
 
-    def do_constitution(self):
+    def do_constitution(self, args):
         self.constitution.raw
         self.constitution.saving
-        pass
+        if self.check:
+            return self.roll(self.constitution.raw)
+        return self.roll(self.constitution.saving)
 
-    def do_intelligence(self):
+    def do_intelligence(self, args):
         self.intelligence.raw
         self.intelligence.saving
-        pass
+        if self.check:
+            return self.roll(self.intelligence.raw)
+        return self.roll(self.intelligence.saving)
 
-    def do_wisdom(self):
+    def do_wisdom(self, args):
         self.wisdom.raw
         self.wisdom.saving
-        pass
+        if self.check:
+            return self.roll(self.wisdom.raw)
+        return self.roll(self.wisdom.saving)
 
-    def do_charisma(self):
+    def do_charisma(self, args):
         self.charisma.raw
         self.charisma.saving
-        pass
+        if self.check:
+            return self.roll(self.charisma.raw)
+        return self.roll(self.charisma.saving)
 
-    def do_athletics(self):
-        pass
+    def do_athletics(self, args):
+        return self.roll(self.strength.athletics)
 
-    def do_acrobatics(self):
-        pass
+    def do_acrobatics(self, args):
+        return self.roll(self.dexterity.acrobatics)
 
-    def do_sleight_of_hand(self):
-        pass
+    def do_sleight_of_hand(self, args):
+        return self.roll(self.dexterity.sleight_of_hand)
 
-    def do_stealth(self):
-        pass
+    def do_stealth(self, args):
+        return self.roll(self.dexterity.stealth)
 
-    def do_arcana(self):
-        pass
+    def do_arcana(self, args):
+        return self.roll(self.intelligence.arcana)
 
-    def do_history(self):
-        pass
+    def do_history(self, args):
+        return self.roll(self.intelligence.history)
 
-    def do_investigation(self):
-        pass
+    def do_investigation(self, args):
+        return self.roll(self.intelligence.investigation)
 
-    def do_nature(self):
-        pass
+    def do_nature(self, args):
+        return self.roll(self.intelligence.nature)
 
-    def do_religion(self):
-        pass
+    def do_religion(self, args):
+        return self.roll(self.intelligence.religion)
 
-    def do_animal_handling(self):
-        pass
+    def do_animal_handling(self, args):
+        return self.roll(self.wisdom.animal_handling)
 
-    def do_insight(self):
-        pass
+    def do_insight(self, args):
+        return self.roll(self.wisdom.insight)
 
-    def do_medicine(self):
-        pass
+    def do_medicine(self, args):
+        return self.roll(self.wisdom.medicine)
 
-    def do_perception(self):
-        pass
+    def do_perception(self, args):
+        return self.roll(self.wisdom.perception)
 
-    def do_survival(self):
-        pass
+    def do_survival(self, args):
+        return self.roll(self.wisdom.survival)
 
-    def do_deception(self):
-        pass
+    def do_deception(self, args):
+        return self.roll(self.charisma.deception)
 
-    def do_intimidation(self):
-        pass
+    def do_intimidation(self, args):
+        return self.roll(self.charisma.intimidation)
 
-    def do_performance(self):
-        pass
+    def do_performance(self, args):
+        return self.roll(self.charisma.performance)
 
-    def do_persuasion(self):
-        pass
+    def do_persuasion(self, args):
+        return self.roll(self.charisma.persuasion)
+
+
+class Player(dndShell):
+    def __init__(self, filepath: str) -> None:
+        with open(filepath, "r") as player_file:
+            player_data = yaml.safe_load(player_file.read())
+        super().__init__()
+        self.strength = Strength(**player_data["strength"])
+        self.dexterity = Dexterity(**player_data["dexterity"])
+        self.constitution = Constitution(**player_data["constitution"])
+        self.intelligence = Intelligence(**player_data["intelligence"])
+        self.wisdom = Wisdom(**player_data["wisdom"])
+        self.charisma = Charisma(**player_data["charisma"])
+        self.cmdloop()
+
+    def __str__(self):
+        return "\n".join(f"\n{k}:\n{v}" for k, v in self.__dict__.items())
+
+
+if __name__ == "__main__":
+    try:
+        filepath = sys.argv[1]
+    except IndexError:
+        print("No filepath given!")
+        exit
+
+    Player(filepath)
