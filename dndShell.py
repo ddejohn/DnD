@@ -132,43 +132,31 @@ class dndShell(cmd.Cmd):
         print(self)
 
     def do_strength(self, args):
-        self.strength.raw
-        self.strength.saving
         if self.check:
             return self.roll(self.strength.raw)
         return self.roll(self.strength.saving)
 
     def do_dexterity(self, args):
-        self.dexterity.raw
-        self.dexterity.saving
         if self.check:
             return self.roll(self.dexterity.raw)
         return self.roll(self.dexterity.saving)
 
     def do_constitution(self, args):
-        self.constitution.raw
-        self.constitution.saving
         if self.check:
             return self.roll(self.constitution.raw)
         return self.roll(self.constitution.saving)
 
     def do_intelligence(self, args):
-        self.intelligence.raw
-        self.intelligence.saving
         if self.check:
             return self.roll(self.intelligence.raw)
         return self.roll(self.intelligence.saving)
 
     def do_wisdom(self, args):
-        self.wisdom.raw
-        self.wisdom.saving
         if self.check:
             return self.roll(self.wisdom.raw)
         return self.roll(self.wisdom.saving)
 
     def do_charisma(self, args):
-        self.charisma.raw
-        self.charisma.saving
         if self.check:
             return self.roll(self.charisma.raw)
         return self.roll(self.charisma.saving)
