@@ -104,8 +104,8 @@ class dndShell(cmd.Cmd):
         args = line.split()
         self.adv = "-a" in args
         self.disadv = "-d" in args
-        self.check = "-c" in args
         self.saving = "-s" in args
+        self.check = "-c" in args or not self.saving
 
         if args[0] != "display":
             print(args[0] + " saving throw"*self.saving
@@ -119,7 +119,11 @@ class dndShell(cmd.Cmd):
         result = min(rolls) if ((not self.adv) and self.disadv) else max(rolls)
         print(f"dice rolls: {rolls}")
         print(f"raw result: {result}")
-        print(f"result: {result + ((ability // 2) - 5)}")
+        if result == 20:
+            print("\nnat 20!!!\n")
+        if result == 1:
+            print("\nnat 1!!!\n")
+        print(f"result with modifier: {result + ((ability // 2) - 5)}\n")
 
     def do_display(self, args):
         print(self)
