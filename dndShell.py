@@ -108,22 +108,25 @@ class dndShell(cmd.Cmd):
         self.check = "-c" in args or not self.saving
 
         if args[0] != "display":
-            print(args[0] + " saving throw"*self.saving
-                          + " check"*self.check
-                          + " with advantage"*self.adv
-                          + " with disadvantage"*self.disadv)
+            print(f"rolling: {args[0]}" + " saving throw"*self.saving
+                                        + " check"*self.check
+                                        + " with advantage"*self.adv
+                                        + " with disadvantage"*self.disadv)
         return args[0]
 
     def roll(self, ability):
         rolls = self.dice(20, 1 + (self.adv ^ self.disadv))
         result = min(rolls) if ((not self.adv) and self.disadv) else max(rolls)
+        modifier = (ability // 2) - 5
+        print(f"raw ability score: {ability}")
+        print(f"modifier: " + "+"*(modifier >= 0) + f"{modifier}")
         print(f"dice rolls: {rolls}")
         print(f"raw result: {result}")
         if result == 20:
             print("\nnat 20!!!\n")
         if result == 1:
             print("\nnat 1!!!\n")
-        print(f"result with modifier: {result + ((ability // 2) - 5)}\n")
+        print(f"result with modifier: {result + modifier}\n")
 
     def do_display(self, args):
         print(self)
