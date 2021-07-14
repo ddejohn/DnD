@@ -5,8 +5,8 @@ import yaml
 
 
 class BaseAbility:
-    def __init__(self, raw: int, saving: int) -> None:
-        self.raw = raw
+    def __init__(self, base_score: int, saving: int) -> None:
+        self.base_score = base_score
         self.saving = saving
     
     def __str__(self):
@@ -14,39 +14,39 @@ class BaseAbility:
 
 
 class Strength(BaseAbility):
-    def __init__(self, *, raw: int,
+    def __init__(self, *, base_score: int,
                           saving: int,
                           athletics: int) -> None:
-        super().__init__(raw, saving)
+        super().__init__(base_score, saving)
         self.athletics = athletics
 
 
 class Dexterity(BaseAbility):
-    def __init__(self, *, raw: int,
+    def __init__(self, *, base_score: int,
                           saving: int,
                           acrobatics: int,
                           sleight_of_hand: int,
                           stealth: int) -> None:
-        super().__init__(raw, saving)
+        super().__init__(base_score, saving)
         self.acrobatics = acrobatics
         self.sleight_of_hand = sleight_of_hand
         self.stealth = stealth
 
 
 class Constitution(BaseAbility):
-    def __init__(self, *, raw: int, saving: int) -> None:
-        super().__init__(raw, saving)
+    def __init__(self, *, base_score: int, saving: int) -> None:
+        super().__init__(base_score, saving)
 
 
 class Intelligence(BaseAbility):
-    def __init__(self, *, raw: int,
+    def __init__(self, *, base_score: int,
                           saving: int,
                           arcana: int,
                           history: int,
                           investigation: int,
                           nature: int,
                           religion: int) -> None:
-        super().__init__(raw, saving)
+        super().__init__(base_score, saving)
         self.arcana = arcana
         self.history = history
         self.investigation = investigation
@@ -55,14 +55,14 @@ class Intelligence(BaseAbility):
 
 
 class Wisdom(BaseAbility):
-    def __init__(self, *, raw: int,
+    def __init__(self, *, base_score: int,
                           saving: int,
                           animal_handling: int,
                           insight: int,
                           medicine: int,
                           perception: int,
                           survival: int) -> None:
-        super().__init__(raw, saving)
+        super().__init__(base_score, saving)
         self.animal_handling = animal_handling
         self.insight = insight
         self.medicine = medicine
@@ -71,13 +71,13 @@ class Wisdom(BaseAbility):
 
 
 class Charisma(BaseAbility):
-    def __init__(self, *, raw: int,
+    def __init__(self, *, base_score: int,
                           saving: int,
                           deception: int,
                           intimidation: int,
                           performance: int,
                           persuasion: int) -> None:
-        super().__init__(raw, saving)
+        super().__init__(base_score, saving)
         self.deception = deception
         self.intimidation = intimidation
         self.performance = performance
@@ -87,7 +87,7 @@ class Charisma(BaseAbility):
 class dndShell(cmd.Cmd):      
     # Grammar: (<skill> | <ability>) ("-", ("c" | "s"), [[" -"], ("a" | "d")])
     # `deception -ca`, skill check with advantage
-    # `charisma -s -d`, raw ability saving throw with disadvantage
+    # `charisma -s -d`, base_score ability saving throw with disadvantage
     # `insight -c`, skill check
     intro = "Welcome to the DnD shell! Type help or ? to list commands.\n"
     prompt = "(DnD) > "
@@ -118,10 +118,10 @@ class dndShell(cmd.Cmd):
         rolls = self.dice(20, 1 + (self.adv ^ self.disadv))
         result = min(rolls) if ((not self.adv) and self.disadv) else max(rolls)
         modifier = (ability // 2) - 5
-        print(f"raw ability score: {ability}")
+        print(f"base ability score: {ability}")
         print(f"modifier: " + "+"*(modifier >= 0) + f"{modifier}")
         print(f"dice rolls: {rolls}")
-        print(f"raw result: {result}")
+        print(f"roll used: {result}")
         if result == 20:
             print("\nnat 20!!!\n")
         if result == 1:
@@ -133,32 +133,32 @@ class dndShell(cmd.Cmd):
 
     def do_strength(self, args):
         if self.check:
-            return self.roll(self.strength.raw)
+            return self.roll(self.strength.base_score)
         return self.roll(self.strength.saving)
 
     def do_dexterity(self, args):
         if self.check:
-            return self.roll(self.dexterity.raw)
+            return self.roll(self.dexterity.base_score)
         return self.roll(self.dexterity.saving)
 
     def do_constitution(self, args):
         if self.check:
-            return self.roll(self.constitution.raw)
+            return self.roll(self.constitution.base_score)
         return self.roll(self.constitution.saving)
 
     def do_intelligence(self, args):
         if self.check:
-            return self.roll(self.intelligence.raw)
+            return self.roll(self.intelligence.base_score)
         return self.roll(self.intelligence.saving)
 
     def do_wisdom(self, args):
         if self.check:
-            return self.roll(self.wisdom.raw)
+            return self.roll(self.wisdom.base_score)
         return self.roll(self.wisdom.saving)
 
     def do_charisma(self, args):
         if self.check:
-            return self.roll(self.charisma.raw)
+            return self.roll(self.charisma.base_score)
         return self.roll(self.charisma.saving)
 
     def do_athletics(self, args):
