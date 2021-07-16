@@ -1,41 +1,87 @@
-strength:
-    base_score: 10
-    saving: 7
-    athletics: 12
+name: 'joey'
+race: 'tiefling'
+class: 'bard'
+level: 1
+hp: 10
+bonus: 3
+abilities:
+    strength:
+        base: 10
+        saving: 10
+        proficient: false
+    dexterity:
+        base: 10
+        saving: 10
+        proficient: false
+    constitution:
+        base: 10
+        saving: 15
+        proficient: true
+    intelligence:
+        base: 10
+        saving: 10
+        proficient: false
+    wisdom:
+        base: 10
+        saving: 10
+        proficient: false
+    charisma:
+        base: 10
+        saving: 10
+        proficient: false
 
-dexterity:
-    base_score: 19
-    saving: 21
-    acrobatics: 12
-    sleight_of_hand: 17
-    stealth: 19
-
-constitution:
-    base_score: 5
-    saving: 7
-
-intelligence:
-    base_score: 17
-    saving: 12
-    arcana: 5
-    history: 6
-    investigation: 19
-    nature: 2
-    religion: 5
-
-wisdom:
-    base_score: 14
-    saving: 12
-    animal_handling: 2
-    insight: 16
-    medicine: 6
-    perception: 18
-    survival: 12
-
-charisma:
-    base_score: 2
-    saving: 3
-    deception: 17
-    intimidation: 1
-    performance: 1
-    persuasion: 5
+skills:
+    athletics:
+        base: 10
+        proficient: false
+    acrobatics:
+        base: 10
+        proficient: false
+    sleight_of_hand:
+        base: 17
+        proficient: true
+    stealth:
+        base: 18
+        proficient: true
+    arcana:
+        base: 10
+        proficient: false
+    history:
+        base: 10
+        proficient: false
+    investigation:
+        base: 10
+        proficient: false
+    nature:
+        base: 10
+        proficient: false
+    religion:
+        base: 10
+        proficient: false
+    animal_handling:
+        base: 10
+        proficient: false
+    insight:
+        base: 10
+        proficient: false
+    medicine:
+        base: 10
+        proficient: false
+    perception:
+        base: 10
+        proficient: false
+    survival:
+        base: 10
+        proficient: false
+    deception:
+        base: 10
+        proficient: false
+    intimidation:
+        base: 10
+        proficient: false
+    performance:
+        base: 10
+        proficient: false
+    persuasion:
+        base: 10
+        proficient: false
