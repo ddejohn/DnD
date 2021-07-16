@@ -48,7 +48,7 @@ class dndShell(cmd.Cmd):
         return 0
 
     def do_check(self, arg):
-        """check <ability or skill> (-a | -d) (-v)"""
+        """check <ability or skill> [(-a | -d) [-v]]"""
         result = self.check(arg,
                             self.verbose,
                             self.advantage,
@@ -57,7 +57,7 @@ class dndShell(cmd.Cmd):
         return 0
 
     def do_save(self, arg):
-        """save <ability> (-a | -d) (-v)"""
+        """save <ability> [(-a | -d) [-v]]"""
         result = self.save(arg,
                            self.verbose,
                            self.advantage,
