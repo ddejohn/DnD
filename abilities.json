@@ -1,0 +1,44 @@
+{
+  "strength": {
+    "baseline": 10,
+    "saving": 7,
+    "athletics": 12
+  },
+  "dexterity": {
+    "baseline": 19,
+    "saving": 21,
+    "acrobatics": 12,
+    "sleight_of_hand": 17,
+    "stealth": 19
+  },
+  "constitution": {
+    "baseline": 5,
+    "saving": 7
+  },
+  "intelligence": {
+    "baseline": 17,
+    "saving": 12,
+    "arcana": 5,
+    "history": 6,
+    "investigation": 19,
+    "nature": 2,
+    "religion": 5
+  },
+  "wisdom": {
+    "baseline": 14,
+    "saving": 12,
+    "animal_handling": 2,
+    "insight": 16,
+    "medicine": 6,
+    "perception": 18,
+    "survival": 12
+  },
+  "charisma": {
+    "baseline": 2,
+    "saving": 3,
+    "deception": 17,
+    "intimidation": 1,
+    "performance": 1,
+    "persuasion": 5
+  }
+}

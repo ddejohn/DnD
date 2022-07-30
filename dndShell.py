@@ -1,11 +1,11 @@
 import cmd
-import sys
+import json
 from random import randint
 
 
 class BaseAbility:
-    def __init__(self, base_score: int, saving: int) -> None:
-        self.base_score = base_score
+    def __init__(self, baseline: int, saving: int) -> None:
+        self.baseline = baseline
         self.saving = saving
 
     def __str__(self):
@@ -13,29 +13,29 @@ class BaseAbility:
 
 
 class Strength(BaseAbility):
-    def __init__(self, *, base_score: int, saving: int, athletics: int) -> None:
-        super().__init__(base_score, saving)
+    def __init__(self, *, baseline: int, saving: int, athletics: int) -> None:
+        super().__init__(baseline, saving)
         self.athletics = athletics
 
 
 class Dexterity(BaseAbility):
-    def __init__(self, *, base_score: int, saving: int, acrobatics: int, sleight_of_hand: int, stealth: int) -> None:
-        super().__init__(base_score, saving)
+    def __init__(self, *, baseline: int, saving: int, acrobatics: int, sleight_of_hand: int, stealth: int) -> None:
+        super().__init__(baseline, saving)
         self.acrobatics = acrobatics
         self.sleight_of_hand = sleight_of_hand
         self.stealth = stealth
 
 
 class Constitution(BaseAbility):
-    def __init__(self, *, base_score: int, saving: int) -> None:
-        super().__init__(base_score, saving)
+    def __init__(self, *, baseline: int, saving: int) -> None:
+        super().__init__(baseline, saving)
 
 
 class Intelligence(BaseAbility):
     def __init__(
-        self, *, base_score: int, saving: int, arcana: int, history: int, investigation: int, nature: int, religion: int
+        self, *, baseline: int, saving: int, arcana: int, history: int, investigation: int, nature: int, religion: int
     ) -> None:
-        super().__init__(base_score, saving)
+        super().__init__(baseline, saving)
         self.arcana = arcana
         self.history = history
         self.investigation = investigation
@@ -47,7 +47,7 @@ class Wisdom(BaseAbility):
     def __init__(
         self,
         *,
-        base_score: int,
+        baseline: int,
         saving: int,
         animal_handling: int,
         insight: int,
@@ -55,7 +55,7 @@ class Wisdom(BaseAbility):
         perception: int,
         survival: int,
     ) -> None:
-        super().__init__(base_score, saving)
+        super().__init__(baseline, saving)
         self.animal_handling = animal_handling
         self.insight = insight
         self.medicine = medicine
@@ -65,9 +65,9 @@ class Wisdom(BaseAbility):
 
 class Charisma(BaseAbility):
     def __init__(
-        self, *, base_score: int, saving: int, deception: int, intimidation: int, performance: int, persuasion: int
+        self, *, baseline: int, saving: int, deception: int, intimidation: int, performance: int, persuasion: int
     ) -> None:
-        super().__init__(base_score, saving)
+        super().__init__(baseline, saving)
         self.deception = deception
         self.intimidation = intimidation
         self.performance = performance
@@ -77,7 +77,7 @@ class Charisma(BaseAbility):
 class dndShell(cmd.Cmd):
     # Grammar: (<skill> | <ability>) ("-", ("c" | "s"), [[" -"], ("a" | "d")])
     # `deception -ca`, skill check with advantage
-    # `charisma -s -d`, base_score ability saving throw with disadvantage
+    # `charisma -s -d`, baseline ability saving throw with disadvantage
     # `insight -c`, skill check
     intro = "Welcome to the DnD shell! Type help or ? to list commands.\n"
     prompt = "(DnD) > "
@@ -126,32 +126,32 @@ class dndShell(cmd.Cmd):
 
     def do_strength(self, args):
         if self.check:
-            return self.roll(self.strength.base_score)
+            return self.roll(self.strength.baseline)
         return self.roll(self.strength.saving)
 
     def do_dexterity(self, args):
         if self.check:
-            return self.roll(self.dexterity.base_score)
+            return self.roll(self.dexterity.baseline)
         return self.roll(self.dexterity.saving)
 
     def do_constitution(self, args):
         if self.check:
-            return self.roll(self.constitution.base_score)
+            return self.roll(self.constitution.baseline)
         return self.roll(self.constitution.saving)
 
     def do_intelligence(self, args):
         if self.check:
-            return self.roll(self.intelligence.base_score)
+            return self.roll(self.intelligence.baseline)
         return self.roll(self.intelligence.saving)
 
     def do_wisdom(self, args):
         if self.check:
-            return self.roll(self.wisdom.base_score)
+            return self.roll(self.wisdom.baseline)
         return self.roll(self.wisdom.saving)
 
     def do_charisma(self, args):
         if self.check:
-            return self.roll(self.charisma.base_score)
+            return self.roll(self.charisma.baseline)
         return self.roll(self.charisma.saving)
 
     def do_athletics(self, args):
@@ -226,7 +226,10 @@ class Player(dndShell):
 
 if __name__ == "__main__":
     try:
-        filepath = sys.argv[1]
-    except IndexError:
-        print("No filepath given!")
-        quit
+        with open("./abilities.json", "r") as f:
+            player_data = json.loads(f.read())
+    except Exception as e:
+        print(e)
+        quit()
+    else:
+        Player(player_data)
