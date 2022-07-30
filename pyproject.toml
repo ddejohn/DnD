@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "dnd"
+version = "0.1.0"
+description = "A barebones DnD dice-rolling CLI"
+authors = ["Devon DeJohn <35853209+ddejohn@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+cmd2 = "^2.4.2"
+black = "^22.6.0"
+mypy = "^0.971"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''

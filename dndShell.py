@@ -1,32 +1,25 @@
 import cmd
 import sys
 from random import randint
-import yaml
 
 
 class BaseAbility:
     def __init__(self, base_score: int, saving: int) -> None:
         self.base_score = base_score
         self.saving = saving
-    
+
     def __str__(self):
         return "\n".join(f"    {k}: {v}" for k, v in self.__dict__.items())
 
 
 class Strength(BaseAbility):
-    def __init__(self, *, base_score: int,
-                          saving: int,
-                          athletics: int) -> None:
+    def __init__(self, *, base_score: int, saving: int, athletics: int) -> None:
         super().__init__(base_score, saving)
         self.athletics = athletics
 
 
 class Dexterity(BaseAbility):
-    def __init__(self, *, base_score: int,
-                          saving: int,
-                          acrobatics: int,
-                          sleight_of_hand: int,
-                          stealth: int) -> None:
+    def __init__(self, *, base_score: int, saving: int, acrobatics: int, sleight_of_hand: int, stealth: int) -> None:
         super().__init__(base_score, saving)
         self.acrobatics = acrobatics
         self.sleight_of_hand = sleight_of_hand
@@ -39,13 +32,9 @@ class Constitution(BaseAbility):
 
 
 class Intelligence(BaseAbility):
-    def __init__(self, *, base_score: int,
-                          saving: int,
-                          arcana: int,
-                          history: int,
-                          investigation: int,
-                          nature: int,
-                          religion: int) -> None:
+    def __init__(
+        self, *, base_score: int, saving: int, arcana: int, history: int, investigation: int, nature: int, religion: int
+    ) -> None:
         super().__init__(base_score, saving)
         self.arcana = arcana
         self.history = history
@@ -55,13 +44,17 @@ class Intelligence(BaseAbility):
 
 
 class Wisdom(BaseAbility):
-    def __init__(self, *, base_score: int,
-                          saving: int,
-                          animal_handling: int,
-                          insight: int,
-                          medicine: int,
-                          perception: int,
-                          survival: int) -> None:
+    def __init__(
+        self,
+        *,
+        base_score: int,
+        saving: int,
+        animal_handling: int,
+        insight: int,
+        medicine: int,
+        perception: int,
+        survival: int,
+    ) -> None:
         super().__init__(base_score, saving)
         self.animal_handling = animal_handling
         self.insight = insight
@@ -71,12 +64,9 @@ class Wisdom(BaseAbility):
 
 
 class Charisma(BaseAbility):
-    def __init__(self, *, base_score: int,
-                          saving: int,
-                          deception: int,
-                          intimidation: int,
-                          performance: int,
-                          persuasion: int) -> None:
+    def __init__(
+        self, *, base_score: int, saving: int, deception: int, intimidation: int, performance: int, persuasion: int
+    ) -> None:
         super().__init__(base_score, saving)
         self.deception = deception
         self.intimidation = intimidation
@@ -84,7 +74,7 @@ class Charisma(BaseAbility):
         self.persuasion = persuasion
 
 
-class dndShell(cmd.Cmd):      
+class dndShell(cmd.Cmd):
     # Grammar: (<skill> | <ability>) ("-", ("c" | "s"), [[" -"], ("a" | "d")])
     # `deception -ca`, skill check with advantage
     # `charisma -s -d`, base_score ability saving throw with disadvantage
@@ -99,7 +89,7 @@ class dndShell(cmd.Cmd):
     def dice(self, num_sides, num_dice=1):
         return [randint(1, num_sides) for _ in range(num_dice)]
 
-    def precmd(self, line) -> None:
+    def precmd(self, line):
         """Strip args"""
         args = line.split()
         self.adv = "-a" in args
@@ -108,10 +98,13 @@ class dndShell(cmd.Cmd):
         self.check = "-c" in args or not self.saving
 
         if args[0] != "display":
-            print(f"rolling: {args[0]}" + " saving throw"*self.saving
-                                        + " check"*self.check
-                                        + " with advantage"*self.adv
-                                        + " with disadvantage"*self.disadv)
+            print(
+                f"rolling: {args[0]}"
+                + " saving throw" * self.saving
+                + " check" * self.check
+                + " with advantage" * self.adv
+                + " with disadvantage" * self.disadv
+            )
         return args[0]
 
     def roll(self, ability):
@@ -119,7 +112,7 @@ class dndShell(cmd.Cmd):
         result = min(rolls) if ((not self.adv) and self.disadv) else max(rolls)
         modifier = (ability // 2) - 5
         print(f"base ability score: {ability}")
-        print(f"modifier: " + "+"*(modifier >= 0) + f"{modifier}")
+        print("modifier: " + "+" * (modifier >= 0) + f"{modifier}")
         print(f"dice rolls: {rolls}")
         print(f"roll used: {result}")
         if result == 20:
@@ -217,9 +210,7 @@ class dndShell(cmd.Cmd):
 
 
 class Player(dndShell):
-    def __init__(self, filepath: str) -> None:
-        with open(filepath, "r") as player_file:
-            player_data = yaml.safe_load(player_file.read())
+    def __init__(self, player_data: dict) -> None:
         super().__init__()
         self.strength = Strength(**player_data["strength"])
         self.dexterity = Dexterity(**player_data["dexterity"])
@@ -239,5 +230,3 @@ if __name__ == "__main__":
     except IndexError:
         print("No filepath given!")
         quit
-
-    Player(filepath)
