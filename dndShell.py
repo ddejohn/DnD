@@ -33,7 +33,15 @@ class Constitution(BaseAbility):
 
 class Intelligence(BaseAbility):
     def __init__(
-        self, *, baseline: int, saving: int, arcana: int, history: int, investigation: int, nature: int, religion: int
+        self,
+        *,
+        baseline: int,
+        saving: int,
+        arcana: int,
+        history: int,
+        investigation: int,
+        nature: int,
+        religion: int,
     ) -> None:
         super().__init__(baseline, saving)
         self.arcana = arcana
@@ -65,13 +73,29 @@ class Wisdom(BaseAbility):
 
 class Charisma(BaseAbility):
     def __init__(
-        self, *, baseline: int, saving: int, deception: int, intimidation: int, performance: int, persuasion: int
+        self,
+        *,
+        baseline: int,
+        saving: int,
+        deception: int,
+        intimidation: int,
+        performance: int,
+        persuasion: int,
     ) -> None:
         super().__init__(baseline, saving)
         self.deception = deception
         self.intimidation = intimidation
         self.performance = performance
         self.persuasion = persuasion
+
+
+# grammar
+#
+# stmt: <ability> <roll_type> [<modifier>] [stmt]
+# ability: {strength|desterity|constitution|intelligence|wisdom|charisma}
+# roll_type: {check|c|saving|s}
+# modifer: {advantage|a|disadvantage|d}
+#
 
 
 class dndShell(cmd.Cmd):
@@ -121,92 +145,8 @@ class dndShell(cmd.Cmd):
             print("\nnat 1!!!\n")
         print(f"result with modifier: {result + modifier}\n")
 
-    def do_display(self, args):
+    def do_display(self, _):
         print(self)
-
-    def do_strength(self, args):
-        if self.check:
-            return self.roll(self.strength.baseline)
-        return self.roll(self.strength.saving)
-
-    def do_dexterity(self, args):
-        if self.check:
-            return self.roll(self.dexterity.baseline)
-        return self.roll(self.dexterity.saving)
-
-    def do_constitution(self, args):
-        if self.check:
-            return self.roll(self.constitution.baseline)
-        return self.roll(self.constitution.saving)
-
-    def do_intelligence(self, args):
-        if self.check:
-            return self.roll(self.intelligence.baseline)
-        return self.roll(self.intelligence.saving)
-
-    def do_wisdom(self, args):
-        if self.check:
-            return self.roll(self.wisdom.baseline)
-        return self.roll(self.wisdom.saving)
-
-    def do_charisma(self, args):
-        if self.check:
-            return self.roll(self.charisma.baseline)
-        return self.roll(self.charisma.saving)
-
-    def do_athletics(self, args):
-        return self.roll(self.strength.athletics)
-
-    def do_acrobatics(self, args):
-        return self.roll(self.dexterity.acrobatics)
-
-    def do_sleight_of_hand(self, args):
-        return self.roll(self.dexterity.sleight_of_hand)
-
-    def do_stealth(self, args):
-        return self.roll(self.dexterity.stealth)
-
-    def do_arcana(self, args):
-        return self.roll(self.intelligence.arcana)
-
-    def do_history(self, args):
-        return self.roll(self.intelligence.history)
-
-    def do_investigation(self, args):
-        return self.roll(self.intelligence.investigation)
-
-    def do_nature(self, args):
-        return self.roll(self.intelligence.nature)
-
-    def do_religion(self, args):
-        return self.roll(self.intelligence.religion)
-
-    def do_animal_handling(self, args):
-        return self.roll(self.wisdom.animal_handling)
-
-    def do_insight(self, args):
-        return self.roll(self.wisdom.insight)
-
-    def do_medicine(self, args):
-        return self.roll(self.wisdom.medicine)
-
-    def do_perception(self, args):
-        return self.roll(self.wisdom.perception)
-
-    def do_survival(self, args):
-        return self.roll(self.wisdom.survival)
-
-    def do_deception(self, args):
-        return self.roll(self.charisma.deception)
-
-    def do_intimidation(self, args):
-        return self.roll(self.charisma.intimidation)
-
-    def do_performance(self, args):
-        return self.roll(self.charisma.performance)
-
-    def do_persuasion(self, args):
-        return self.roll(self.charisma.persuasion)
 
 
 class Player(dndShell):
@@ -222,6 +162,90 @@ class Player(dndShell):
 
     def __str__(self):
         return "\n".join(f"\n{k}:\n{v}" for k, v in self.__dict__.items())
+
+    def do_strength(self, _):
+        if self.check:
+            return self.roll(self.strength.baseline)
+        return self.roll(self.strength.saving)
+
+    def do_dexterity(self, _):
+        if self.check:
+            return self.roll(self.dexterity.baseline)
+        return self.roll(self.dexterity.saving)
+
+    def do_constitution(self, _):
+        if self.check:
+            return self.roll(self.constitution.baseline)
+        return self.roll(self.constitution.saving)
+
+    def do_intelligence(self, _):
+        if self.check:
+            return self.roll(self.intelligence.baseline)
+        return self.roll(self.intelligence.saving)
+
+    def do_wisdom(self, _):
+        if self.check:
+            return self.roll(self.wisdom.baseline)
+        return self.roll(self.wisdom.saving)
+
+    def do_charisma(self, _):
+        if self.check:
+            return self.roll(self.charisma.baseline)
+        return self.roll(self.charisma.saving)
+
+    def do_athletics(self, _):
+        return self.roll(self.strength.athletics)
+
+    def do_acrobatics(self, _):
+        return self.roll(self.dexterity.acrobatics)
+
+    def do_sleight_of_hand(self, _):
+        return self.roll(self.dexterity.sleight_of_hand)
+
+    def do_stealth(self, _):
+        return self.roll(self.dexterity.stealth)
+
+    def do_arcana(self, _):
+        return self.roll(self.intelligence.arcana)
+
+    def do_history(self, _):
+        return self.roll(self.intelligence.history)
+
+    def do_investigation(self, _):
+        return self.roll(self.intelligence.investigation)
+
+    def do_nature(self, _):
+        return self.roll(self.intelligence.nature)
+
+    def do_religion(self, _):
+        return self.roll(self.intelligence.religion)
+
+    def do_animal_handling(self, _):
+        return self.roll(self.wisdom.animal_handling)
+
+    def do_insight(self, _):
+        return self.roll(self.wisdom.insight)
+
+    def do_medicine(self, _):
+        return self.roll(self.wisdom.medicine)
+
+    def do_perception(self, _):
+        return self.roll(self.wisdom.perception)
+
+    def do_survival(self, _):
+        return self.roll(self.wisdom.survival)
+
+    def do_deception(self, _):
+        return self.roll(self.charisma.deception)
+
+    def do_intimidation(self, _):
+        return self.roll(self.charisma.intimidation)
+
+    def do_performance(self, _):
+        return self.roll(self.charisma.performance)
+
+    def do_persuasion(self, _):
+        return self.roll(self.charisma.persuasion)
 
 
 if __name__ == "__main__":
